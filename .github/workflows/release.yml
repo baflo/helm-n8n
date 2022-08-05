@@ -32,7 +32,7 @@ jobs:
         run: |
           for dir in $(ls -d charts/*/); do
             cd $dir
-            helm dependency build
+            helm dependency update
             cd ../..
           done
 
