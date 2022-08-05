@@ -92,6 +92,6 @@ Create the name of the basic auth secret to use
   value: "5432"
 {{- end }}
 
-{{- define "n8n.serviceFullName" }}
+{{ define "n8n.serviceFullName" -}}
 {{ with (include "n8n.fullname" .) }}{{ eq . "n8n"  | ternary "n8n-svc" . }}{{ end }}
 {{- end }}
