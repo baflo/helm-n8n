@@ -10,7 +10,7 @@ spec:
   {{- end }}
   selector:
     matchLabels:
-      {{- include "n8n.selectorLabels" . | nindent 6 }}
+      {{- include "n8n.mainAppSelectorLabels" . | nindent 6 }}
   template:
     metadata:
       {{- with .Values.podAnnotations }}
@@ -18,7 +18,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
-        {{- include "n8n.selectorLabels" . | nindent 8 }}
+        {{- include "n8n.mainAppSelectorLabels" . | nindent 8 }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -35,18 +35,37 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 5678
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: /
+              path: /healthz
               port: http
           readinessProbe:
             httpGet:
-              path: /
+              path: /healthz
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+          env:
+            {{- include "n8n.app.envvars" . | indent 12 }}
+            {{- if .Values.n8n.basicAuth }}
+            - name: N8N_BASIC_AUTH_ACTIVE
+              value: "true"
+            {{- end }}
+            {{- if .Values.n8n.scaling.enabled }}
+            - name: EXECUTIONS_MODE
+              value: queue
+            - name: QUEUE_BULL_REDIS_HOST
+              value: {{ include "n8n.fullname" . }}-redis-headless
+            - name: QUEUE_BULL_REDIS_PORT
+              value: "{{ .Values.redis.master.service.ports.redis | default 6379 }}"
+            {{- end }}
+          envFrom:
+            {{- if .Values.n8n.basicAuth }}
+            - secretRef:
+                name: {{ include "n8n.basicAuthSecretName" . }}
+            {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

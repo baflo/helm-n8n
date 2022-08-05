@@ -51,6 +51,22 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
 {{/*
+Main app selector labels
+*/}}
+{{- define "n8n.mainAppSelectorLabels" -}}
+{{ include "n8n.selectorLabels" . }}
+app.kubernetes.io/role: main
+{{- end }}
+
+{{/*
+Worker selector labels
+*/}}
+{{- define "n8n.workerAppSelectorLabels" -}}
+{{ include "n8n.selectorLabels" . }}
+app.kubernetes.io/role: worker
+{{- end }}
+
+{{/*
 Create the name of the service account to use
 */}}
 {{- define "n8n.serviceAccountName" -}}
@@ -59,4 +75,19 @@ Create the name of the service account to use
 {{- else }}
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
+{{- end }}
+
+{{/*
+Create the name of the basic auth secret to use
+*/}}
+{{- define "n8n.basicAuthSecretName" -}}
+{{- include "n8n.fullname" . }}-basic-auth
+{{- end }}
+
+
+{{- define "n8n.app.envvars" }}
+- name: DB_POSTGRESDB_HOST
+  value: n8n-postgres
+- name: DB_POSTGRESDB_PORT
+  value: "5432"
 {{- end }}
