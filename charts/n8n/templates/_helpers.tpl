@@ -91,3 +91,7 @@ Create the name of the basic auth secret to use
 - name: DB_POSTGRESDB_PORT
   value: "5432"
 {{- end }}
+
+{{- define "n8n.serviceFullName" }}
+{{ with (include "n8n.fullname" .) }}{{ eq . "n8n"  | ternary "n8n-svc" . }}{{ end }}
+{{- end }}

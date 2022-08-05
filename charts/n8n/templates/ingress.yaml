@@ -49,11 +49,11 @@ spec:
             backend:
               {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
               service:
-                name: {{ $fullName }}
+                name: {{ include "n8n.serviceFullName" . }}
                 port:
                   name: http
               {{- else }}
-              serviceName: {{ $fullName }}
+              serviceName: {{ include "n8n.serviceFullName" . }}
               servicePort: {{ $svcPort }}
               {{- end }}
           {{- end }}
