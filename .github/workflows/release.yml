@@ -45,6 +45,12 @@ jobs:
           git tag $NEXT_VERSION
           git push origin $NEXT_VERSION
 
+      - uses: redhat-cop/github-actions/set-helm-version@master
+        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
+        with:
+          path: ./charts/n8n
+          chart_version: ${{ steps.get_next_version.outputs.version }}
+
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.4.0
         env:
