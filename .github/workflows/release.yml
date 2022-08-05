@@ -34,6 +34,17 @@ jobs:
             helm dependency list $dir 2> /dev/null | tail +2 | head -n -1 | awk '{ print "helm repo add " $1 " " $3 }' | while read cmd; do $cmd; done
           done
 
+      - name: Get next version
+        id: get_next_version
+        uses: thenativeweb/get-next-version
+
+      - name: Create new release
+        if: ${{ steps.get_next_version.outputs.hasNextVersion == "true" }}
+        run: |
+          NEXT_VERSION=${{ steps.get_next_version.outputs.version }}
+          git tag $NEXT_VERSION
+          git push origin $NEXT_VERSION
+
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.4.0
         env:
