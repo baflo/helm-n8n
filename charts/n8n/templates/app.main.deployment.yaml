@@ -4,8 +4,6 @@ metadata:
   name: {{ include "n8n.fullname" . }}
   labels:
     {{- include "n8n.labels" . | nindent 4 }}
-  annotations:
-    checksum/basic-auth-secret: {{ include (print $.Template.BasePath "/basic-auth.secret.yaml") . | sha256sum }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
@@ -17,6 +15,7 @@ spec:
     metadata:
       {{- with .Values.podAnnotations }}
       annotations:
+        checksum/basic-auth-secret: {{ include (print $.Template.BasePath "/basic-auth.secret.yaml") . | sha256sum }}
         {{- toYaml . | nindent 8 }}
       {{- end }}
       labels:
