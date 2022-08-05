@@ -13,11 +13,11 @@ spec:
       {{- include "n8n.mainAppSelectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
       annotations:
         checksum/basic-auth-secret: {{ include (print $.Template.BasePath "/basic-auth.secret.yaml") . | sha256sum }}
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
+        {{- with .Values.podAnnotations }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
       labels:
         {{- include "n8n.mainAppSelectorLabels" . | nindent 8 }}
     spec:
