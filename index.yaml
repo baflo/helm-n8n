@@ -2,6 +2,23 @@ apiVersion: v1
 entries:
   n8n:
   - apiVersion: v2
+    appVersion: 0.191.1
+    created: "2022-08-23T08:43:57.034684177Z"
+    dependencies:
+    - name: postgresql
+      repository: https://charts.bitnami.com/bitnami
+      version: ^11.0.0
+    - name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: ^17.0.0
+    description: A Helm chart for Kubernetes
+    digest: c33f6d01250f36cd31b52402de0ef5a7fb0523f84c224319bdc5febf9db1a642
+    name: n8n
+    type: application
+    urls:
+    - https://github.com/baflo/helm-n8n/releases/download/n8n-0.1.8/n8n-0.1.8.tgz
+    version: 0.1.8
+  - apiVersion: v2
     appVersion: 0.190.0
     created: "2022-08-12T09:38:35.835421733Z"
     dependencies:
@@ -137,4 +154,4 @@ entries:
     urls:
     - https://github.com/baflo/helm-n8n/releases/download/n8n-0.1.0/n8n-0.1.0.tgz
     version: 0.1.0
-generated: "2022-08-12T09:38:35.835663348Z"
+generated: "2022-08-23T08:43:57.034882375Z"
