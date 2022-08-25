@@ -38,6 +38,18 @@ jobs:
         id: get_next_version
         uses: thenativeweb/get-next-version@2.1.1
 
+      - name: Updates Chart.yaml version
+        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
+        uses: mikefarah/yq@master
+        with:
+          cmd: yq -i '.version = "${{ steps.get_next_version.outputs.version }}"' 'charts/n8n/Chart.yaml'
+
+      - name: Commit changes caused by version bump
+        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "chore: bump chart version to ${{ steps.get_next_version.outputs.version }}"
+
       - name: Create new release
         if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
         run: |
