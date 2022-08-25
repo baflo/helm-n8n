@@ -86,10 +86,19 @@ Create the name of the basic auth secret to use
 
 
 {{- define "n8n.app.envvars" }}
+- name: DB_TYPE
+  value: postgresdb
 - name: DB_POSTGRESDB_HOST
-  value: n8n-postgres
+  value: n8n-postgresql
 - name: DB_POSTGRESDB_PORT
   value: "5432"
+- name: DB_POSTGRESDB_PASSWORD
+  value: postgres
+- name: DB_POSTGRESDB_USER
+  valueFrom:
+    secretKeyRef:
+      key: postgres-password
+      name: n8n-postgresql
 {{- end }}
 
 {{ define "n8n.serviceFullName" -}}
