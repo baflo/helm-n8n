@@ -92,7 +92,7 @@ Create the name of the basic auth secret to use
   value: n8n-postgresql
 - name: DB_POSTGRESDB_PORT
   value: "5432"
-- name: DB_POSTGRESDB_PASSWORD
+- name: DB_POSTGRESDB_USER
   value: postgres
 - name: DB_POSTGRESDB_USER
   valueFrom:
