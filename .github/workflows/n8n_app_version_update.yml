@@ -29,7 +29,6 @@ jobs:
           cmd: yq -i '.appVersion = "${{ github.event.client_payload.nextVersion }}"' 'charts/n8n/Chart.yaml'
 
       - name: Commit appVersion update
-        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "chore: bump n8n appVersion to ${{ github.event.client_payload.nextVersion }}"
