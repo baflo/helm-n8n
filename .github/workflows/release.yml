@@ -66,25 +66,15 @@ jobs:
           chart_version: ${{ steps.get_next_version.outputs.version }}
           
       - name: Delete existing tag
-        uses: actions/github-script@v4
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            try {
-              const { owner, repo } = context.repo
-              const version = "${{ steps.get_next_version.outputs.version }}";
-              const refs = [
-                "tags/${{ steps.get_next_version.outputs.version }}",
-                "tags/n8n-${{ steps.get_next_version.outputs.version }}",
-              ];
+        run: |
+          NEXT_VERSION=${{ steps.get_next_version.outputs.version }}
+          TAGS=("$NEXT_VERSION" "n8n-$NEXT_VERSION")
 
-              for(const ref of refs) {
-                console.log("Going to delete ref:", ref);
-                await github.git.deleteRef({ owner, repo, ref }) 
-              }
-            } catch(e) {
-              console.log("ERROR:", e);
-            }
+          for tag in ${TAGS[@]}
+          do
+            git tag -d $tag
+            git push --delete origin $tag
+          done          
           
       - name: Delete existing release
         uses: actions/github-script@v4
