@@ -64,38 +64,6 @@ jobs:
         with:
           path: ./charts/n8n
           chart_version: ${{ steps.get_next_version.outputs.version }}
-          
-      - name: Delete existing tag
-        uses: actions/github-script@v4
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            try {
-              const { owner, repo } = context.repo
-              const version = "${{ steps.get_next_version.outputs.version }}";
-              const ref = "tags/${{ steps.get_next_version.outputs.version }}";
-
-              console.log("Going to delete ref:", ref);
-              await github.git.deleteRef({ owner, repo, ref }) 
-            } catch(e) {
-              console.log("ERROR:", e);
-            }
-          
-      - name: Delete existing release
-        uses: actions/github-script@v4
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            try {
-              const { owner, repo } = context.repo
-              const tag = "n8n-${{ steps.get_next_version.outputs.version }}";
-              const { data: { id } } = await github.repos.getReleaseByTag({ owner, repo, tag })
-
-              console.log("Going to delete release ID:", id);
-              await github.repos.deleteRelease({ owner, repo, release_id: id }) 
-            } catch(e) {
-              console.log("ERROR:", e);
-            }
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.4.0
