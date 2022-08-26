@@ -6,7 +6,7 @@ on:
       - update_n8n_app_version
 
 jobs:
-  release:
+  update:
     # depending on default permission settings for your org (contents being read-only or read-write for workloads), you will have to add permissions
     # see: https://docs.github.com/en/actions/security-guides/automatic-token-authentication#modifying-the-permissions-for-the-github_token
     permissions:
@@ -33,13 +33,6 @@ jobs:
         with:
           commit_message: "chore: bump n8n appVersion to ${{ github.event.client_payload.nextVersion }}"
 
-      - name: Delete latest helm n8n release
-        uses: actions/github-script@v4
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            const { owner, repo } = context.repo
-            const { data: { id } } = await github.repos.getLatestRelease({ owner, repo })
-            await github.repos.deleteRelease({ owner, repo, release_id: id })
-
-      - uses: ./.github/workflows/release.yml
+    release:
+      needs: update
+      uses: ./.github/workflows/release.yml
