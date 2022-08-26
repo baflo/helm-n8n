@@ -33,6 +33,6 @@ jobs:
         with:
           commit_message: "chore: bump n8n appVersion to ${{ github.event.client_payload.nextVersion }}"
 
-    release:
-      needs: update
-      uses: ./.github/workflows/release.yml
+  release:
+    needs: update
+    uses: ./.github/workflows/release.yml
