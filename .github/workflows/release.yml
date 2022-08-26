@@ -75,7 +75,7 @@ jobs:
               const version = "${{ steps.get_next_version.outputs.version }}";
               const ref = "tags/n8n-${{ steps.get_next_version.outputs.version }}";
 
-              console.log("Going to delete ref:", version);
+              console.log("Going to delete ref:", ref);
               await github.git.deleteRef({ owner, repo, ref }) 
             } catch(e) {
               console.log("ERROR:", e);
