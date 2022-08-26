@@ -31,7 +31,7 @@ jobs:
       - name: Commit appVersion update
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "chore: bump n8n appVersion to ${{ github.event.client_payload.nextVersion }}"
+          commit_message: "feat: bump n8n appVersion to ${{ github.event.client_payload.nextVersion }}"
 
   release:
     needs: update

@@ -50,7 +50,7 @@ jobs:
         if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "feat: bump chart version to ${{ steps.get_next_version.outputs.version }}"
+          commit_message: "chore: bump chart version to ${{ steps.get_next_version.outputs.version }}"
 
       - name: Create new release
         if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
