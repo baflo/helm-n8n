@@ -36,3 +36,5 @@ jobs:
   release:
     needs: update
     uses: ./.github/workflows/release.yml
+    with:
+      token: ${{ secrets.token }}
