@@ -42,6 +42,14 @@ jobs:
         uses: thenativeweb/get-next-version@2.1.1
 
       - uses: redhat-cop/github-actions/set-helm-version@master
+        if: github.event.client_payload.appVersion == null
+        with:
+          path: ./charts/n8n
+          chart_version: ${{ steps.get_next_version.outputs.version }}
+          app_version: ${{ github.event.client_payload.appVersion }}
+
+      - uses: redhat-cop/github-actions/set-helm-version@master
+        if: github.event.client_payload.appVersion != null
         with:
           path: ./charts/n8n
           chart_version: ${{ steps.get_next_version.outputs.version }}
