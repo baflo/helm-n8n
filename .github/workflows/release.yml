@@ -72,8 +72,8 @@ jobs:
 
           for tag in ${TAGS[@]}
           do
-            git tag -d $tag
-            git push --delete origin $tag
+            git tag -d $tag || true;
+            git push --delete origin $tag || true;
           done          
           
       - name: Delete existing release
