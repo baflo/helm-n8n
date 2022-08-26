@@ -66,6 +66,7 @@ jobs:
           chart_version: ${{ steps.get_next_version.outputs.version }}
 
       - name: Run chart-releaser
+        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
         uses: helm/chart-releaser-action@v1.4.0
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
