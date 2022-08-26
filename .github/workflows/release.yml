@@ -4,8 +4,9 @@ on:
   push:
     branches:
       - main
-  workflow_call: {}
-
+  repository_dispatch:
+    types:
+      - update_n8n_app_version
 
 jobs:
   release:
@@ -40,30 +41,17 @@ jobs:
         id: get_next_version
         uses: thenativeweb/get-next-version@2.1.1
 
-      - name: Updates Chart.yaml version
-        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
-        uses: mikefarah/yq@master
+      - uses: redhat-cop/github-actions/set-helm-version@master
         with:
-          cmd: yq -i '.version = "${{ steps.get_next_version.outputs.version }}"' 'charts/n8n/Chart.yaml'
+          path: ./charts/n8n
+          chart_version: ${{ steps.get_next_version.outputs.version }}
+          app_version: ${{ github.event.client_payload.appVersion }}
 
       - name: Commit changes caused by version bump
         if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "chore: bump chart version to ${{ steps.get_next_version.outputs.version }}"
-
-      - name: Create new release
-        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
-        run: |
-          NEXT_VERSION=${{ steps.get_next_version.outputs.version }}
-          git tag $NEXT_VERSION
-          git push origin $NEXT_VERSION
-
-      - uses: redhat-cop/github-actions/set-helm-version@master
-        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
-        with:
-          path: ./charts/n8n
-          chart_version: ${{ steps.get_next_version.outputs.version }}
+          commit_message: "chore: bump chart versions"
 
       - name: Run chart-releaser
         if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
