@@ -4,6 +4,11 @@ on:
   push:
     branches:
       - main
+  workflow_call:
+    secrets:
+      token:
+        required: true
+
 
 jobs:
   release:
