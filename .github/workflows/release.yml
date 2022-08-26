@@ -72,8 +72,13 @@ jobs:
           script: |
             try {
               const { owner, repo } = context.repo
-              await github.git.deleteRef({ owner, repo, ref: "${{ steps.get_next_version.outputs.version }}" }) 
-            } catch(e) {}
+              const version = "${{ steps.get_next_version.outputs.version }}";
+
+              console.log("Going to delete ref:", version);
+              await github.git.deleteRef({ owner, repo, ref: version }) 
+            } catch(e) {
+              console.log("ERROR:", e);
+            }
           
       - name: Delete existing release
         uses: actions/github-script@v4
@@ -82,9 +87,14 @@ jobs:
           script: |
             try {
               const { owner, repo } = context.repo
-              const { data: { id } } = await github.repos.getReleaseByTag({ owner, repo, tag: "${{ steps.get_next_version.outputs.version }}" })
+              const tag = "n8n-${{ steps.get_next_version.outputs.version }}";
+              const { data: { id } } = await github.repos.getReleaseByTag({ owner, repo, tag })
+
+              console.log("Going to delete release ID:", id);
               await github.repos.deleteRelease({ owner, repo, release_id: id }) 
-            } catch(e) {}
+            } catch(e) {
+              console.log("ERROR:", e);
+            }
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.4.0
