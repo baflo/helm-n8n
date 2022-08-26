@@ -32,3 +32,14 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "chore: bump n8n appVersion to ${{ github.event.client_payload.nextVersion }}"
+
+      - name: Delete latest helm n8n release
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const { owner, repo } = context.repo
+            const { data: { id } } = await github.repos.getLatestRelease({ owner, repo })
+            await github.repos.deleteRelease({ owner, repo, release_id: id })
+
+      - uses: ./release.yml
