@@ -37,23 +37,25 @@ jobs:
             helm dependency list $dir 2> /dev/null | tail +2 | head -n -1 | awk '{ print "helm repo add " $1 " " $3 }' | while read cmd; do $cmd; done
           done
 
+      - uses: redhat-cop/github-actions/set-helm-version@master
+        if: github.event.client_payload.appVersion != null
+        with:
+          path: ./charts/n8n
+          app_version: ${{ github.event.client_payload.appVersion }}
+
+      - name: Commit changes caused by version bump
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: "feat!: bump cchart appVersion to ${{ github.event.client_payload.appVersion }}"
+
       - name: Get next version
         id: get_next_version
         uses: thenativeweb/get-next-version@2.1.1
 
       - uses: redhat-cop/github-actions/set-helm-version@master
-        if: github.event.client_payload.appVersion == null
         with:
           path: ./charts/n8n
           chart_version: ${{ steps.get_next_version.outputs.version }}
-          app_version: ${{ github.event.client_payload.appVersion }}
-
-      - uses: redhat-cop/github-actions/set-helm-version@master
-        if: github.event.client_payload.appVersion != null
-        with:
-          path: ./charts/n8n
-          chart_version: ${{ steps.get_next_version.outputs.version }}
-          app_version: ${{ github.event.client_payload.appVersion }}
 
       - name: Commit changes caused by version bump
         if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
