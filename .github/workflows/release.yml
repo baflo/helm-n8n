@@ -73,9 +73,10 @@ jobs:
             try {
               const { owner, repo } = context.repo
               const version = "${{ steps.get_next_version.outputs.version }}";
+              const ref = "tags/n8n-${{ steps.get_next_version.outputs.version }}";
 
               console.log("Going to delete ref:", version);
-              await github.git.deleteRef({ owner, repo, ref: version }) 
+              await github.git.deleteRef({ owner, repo, ref }) 
             } catch(e) {
               console.log("ERROR:", e);
             }
