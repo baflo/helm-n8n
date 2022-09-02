@@ -46,13 +46,14 @@ jobs:
       - name: Commit changes caused by version bump
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: "feat!: bump cchart appVersion to ${{ github.event.client_payload.appVersion }}"
+          commit_message: "feat: bump chart appVersion to ${{ github.event.client_payload.appVersion }}"
 
       - name: Get next version
         id: get_next_version
         uses: thenativeweb/get-next-version@2.1.1
 
       - uses: redhat-cop/github-actions/set-helm-version@master
+        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
         with:
           path: ./charts/n8n
           chart_version: ${{ steps.get_next_version.outputs.version }}
@@ -62,6 +63,7 @@ jobs:
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: "chore: bump chart version to ${{ steps.get_next_version.outputs.version }}"
+          tagging_message: "${{ steps.get_next_version.outputs.version }}"
 
       - name: Run chart-releaser
         if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
