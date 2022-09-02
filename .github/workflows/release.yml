@@ -58,15 +58,14 @@ jobs:
           path: ./charts/n8n
           chart_version: ${{ steps.get_next_version.outputs.version }}
 
-      - name: Commit changes caused by version bump
-        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: "chore: bump chart version to ${{ steps.get_next_version.outputs.version }}"
-          tagging_message: "${{ steps.get_next_version.outputs.version }}"
-
       - name: Run chart-releaser
         if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
         uses: helm/chart-releaser-action@v1.4.0
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Create version tag
+        if: ${{ steps.get_next_version.outputs.hasNextVersion == 'true' }}
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          tagging_message: "${{ steps.get_next_version.outputs.version }}"
