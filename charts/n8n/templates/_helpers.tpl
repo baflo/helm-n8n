@@ -80,8 +80,8 @@ Create the name of the service account to use
 {{/*
 Create the name of the basic auth secret to use
 */}}
-{{- define "n8n.basicAuthSecretName" -}}
-{{- include "n8n.fullname" . }}-basic-auth
+{{- define "n8n.envVarsSecretName" -}}
+{{- include "n8n.fullname" . }}-secret-env-vars
 {{- end }}
 
 

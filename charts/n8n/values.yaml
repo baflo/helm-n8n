@@ -6,6 +6,7 @@ n8n:
   basicAuth: true
   basicAuthUser: null
   basicAuthPassword: null
+  encryptionKey: null
 
   prometheus:
     enabled: false

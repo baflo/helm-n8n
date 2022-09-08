@@ -63,10 +63,8 @@ spec:
               value: "{{ .Values.redis.master.service.ports.redis | default 6379 }}"
             {{- end }}
           envFrom:
-            {{- if .Values.n8n.basicAuth }}
             - secretRef:
-                name: {{ include "n8n.basicAuthSecretName" . }}
-            {{- end }}
+                name: {{ include "n8n.envVarsSecretName" . }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
