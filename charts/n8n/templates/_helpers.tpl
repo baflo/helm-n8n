@@ -93,11 +93,11 @@ Create the name of the basic auth secret to use
 - name: DB_POSTGRESDB_PORT
   value: "5432"
 - name: DB_POSTGRESDB_USER
-  value: postgres
+  value: {{ default "postgres" .Values.postgresql.auth.username }}
 - name: DB_POSTGRESDB_PASSWORD
   valueFrom:
     secretKeyRef:
-      key: postgres-password
+      key: {{ ternary .Values.postgresql.auth.secretKeys.adminPasswordKey .Values.postgresql.auth.secretKeys.userPasswordKey (empty .Values.postgresql.auth.username) }}
       name: n8n-postgresql
 {{- end }}
 
